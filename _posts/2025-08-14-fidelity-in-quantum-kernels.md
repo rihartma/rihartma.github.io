@@ -2,6 +2,7 @@
 layout: post
 title:  "Fidelity in quantum kernels"
 date:   2025-08-14
+mathjax: true
 ---
 
 I've been recently playing with quantum kernels and quantum support vector machines. When it comes to fidelity quantum kernels, the central building block
