@@ -2,7 +2,7 @@
 layout: default
 title: Home
 ---
-# Welcome to My Blog
+# My musings
 
 Below are my latest posts:
 
