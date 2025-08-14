@@ -1,15 +1,11 @@
+---
+layout: default
+title: Home
+---
+# Welcome to My Blog
 
-
-layout: default title: Home
-
-Welcome to My Blog
-
-This is a blog where I share ideas, tutorials, and more. Browse the posts below!
+Below are my latest posts:
 
 {% for post in site.posts %}
-
-
-
-
-
-[{{ post.title }}]({{ post.url }}) - {{ post.date | date: "%B %d, %Y" }} {% endfor %}
+- [{{ post.title }}]({{ post.url }}) - {{ post.date | date: "%B %d, %Y" }}
+{% endfor %}
