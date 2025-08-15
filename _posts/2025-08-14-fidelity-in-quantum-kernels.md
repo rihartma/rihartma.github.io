@@ -86,7 +86,8 @@ ${\hat{p}_0 = a \hat{s}_0 + b \hat{s}_1.}$
 
 $$\operatorname{Var}(\hat{p}_0) = a^2 \operatorname{Var}(\hat{s}_0) + b^2 \operatorname{Var}(\hat{s}_1) + 2ab \operatorname{Cov}(\hat{s}_0, \hat{s}_1)$$
 
-Let $I_i$ be an indicator r.v. that indicates whether we got `0...0` on i-th shot. It holds that $P(I_i=1)=s_0$ and $\hat{s}_0 = \frac{\sum_{i=1}^N I_i}{N}$. Now, we calculate $\operatorname{Var}(\hat{s}_0)$.
+Let $I_i$ be an indicator r.v. that indicates whether we got `0...0` on i-th shot. It holds that $P(I_i=1)=s_0$ and $\hat{s}_0 = \frac{1}{N}\sum_{i=1}^N I_i.$
+Now, we calculate $\operatorname{Var}(\hat{s}_0)$.
 
 $$\operatorname{Var}(\hat{s}_0) = \frac{1}{N^2} N \operatorname{Var}(I_1) = \frac{s_0 (1-s_0)}{N}$$
 
