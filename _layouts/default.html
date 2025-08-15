@@ -10,10 +10,18 @@
     h1, h2, h3 { color: #333; }
     .post-list { list-style: none; padding: 0; }
     .post-list li { margin: 10px 0; }
-  </style>
-	{% if page.mathjax %}
-	<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
-	{% endif %}
+  </style>	
+  {% if page.mathjax %}
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+  {% endif %}
 </head>
 <body>
   <header>
