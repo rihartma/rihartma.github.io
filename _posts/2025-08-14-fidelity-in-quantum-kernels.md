@@ -39,7 +39,7 @@ It is not hard to derive the relation between $s_?$ and $p_?$
 
 $$s_0 = p_0 (1-q)^n + p_1 q(1-q)^{n-1} + \sum_{i=2}^n p_i q^i (1-q)^{n-i},$$
 
-$$s_1 = p_0 n q(1-q)^(n-1) + p_1 (1-q)^n + \sum_{i=2}^n p_i q^{i-1} (1-q)^{n-i+1}.$$
+$$s_1 = p_0 n q(1-q)^{n-1| + p_1 (1-q)^n + \sum_{i=2}^n p_i q^{i-1} (1-q)^{n-i+1}.$$
 
 To simplify the calculations, we omit the third terms in the equations, so we get $s_0 = p_0 (1-q)^n + p_1 q(1-q)^{n-1}$ and $s_1 = p_0 n q(1-q)^(n-1) + p_1 (1-q)^n$.
 
@@ -63,7 +63,7 @@ Nice, we got an unbiased estimator, but if we plug in some sample numbers, we se
 
 Notice, that it is not the case that we would increase the count of `0...0` by some fraction of $S_1$. We just increase the count of `0...0` by some coefficient and decrease it with some fraction
 of $S_1$. Huh, not what I expected in the first place. Hence, eventhough this seems like a good estimator, if we don't get $s_0>0$ (it really often happens that $s_0=0$, because we don't have resources to make
-sufficient amount of shots... exponentially many...), we get even negative $\hat{p}_0$. How to get out of it? Well, I got something in my mind but it needs to settle down little bit :D
+sufficient amount of shots... exponentially many...), we get even negative $\hat{p}_0$. How to get out of it? Well, I got something in my mind but it needs to settle down little bit:D
 
 What next? There are several problems and some of them are easy to fix. For example, it is impossible in real computations that the readout errors are independent. There will be some correlations etc..., so it will be insufficient to work only with $s_0$ and $s_1$. We need to extend the model to also consider bitstring with higher Hamming distance from `0...0`.
 With the logic I have described, it is straightforward to extend this model to 
