@@ -38,42 +38,63 @@ where $H(\cdot, \cdot)$ is a Hamming distance and $n$ is the num. of qubits (len
 
 It is not hard to derive the relation between $s_?$ and $p_?$
 
-$$s_0 = p_0 (1-q)^n + p_1 q(1-q)^{n-1} + \sum_{i=2}^n p_i q^i (1-q)^{n-i},$$
+$$s_0 = p_0 (1-q)^n + p_1 q(1-q)^{n-1} + \dots,$$
 
-$$s_1 = p_0 n q(1-q)^{n-1} + p_1 (1-q)^n + \sum_{i=2}^n p_i q^{i-1} (1-q)^{n-i+1}.$$
+$$s_1 = p_0 n q(1-q)^{n-1} + p_1 \bigl( (1-q)^n + (n-1) q^2 (1-q)^{n-2}\bigr) + \dots.$$
 
-To simplify the calculations, we omit the third terms in the equations, so we get $s_0 = p_0 (1-q)^n + p_1 q(1-q)^{n-1}$ and $s_1 = p_0 n q(1-q)^{n-1} + p_1 (1-q)^n$.
+To simplify the calculations, we keep only the first and the second term in the equations, so we get $s_0 = p_0 (1-q)^n + p_1 q(1-q)^{n-1}$ and $s_1 = p_0 n q(1-q)^{n-1} + p_1 \bigl( (1-q)^n + (n-1) q^2 (1-q)^{n-2}\bigr)$.
+
+An explanation of these four terms:
+* $p_0 (1-q)^n$ is the probability of measuring all-zeros without any unwanted bit-flip.
+* $p_1 q(1-q)^{n-1}$ is the probability of measuring all-zeros eventhough it should have been string with Hamming weight 1. The only "1" in the string got flipped to "0" and the rest remained unchanged.
+* $p_0 n q (1-q)^{n-1}$ is the probability of measuring string with Hamming weigth 1 eventhoug it should have been all-zeros string. That is, one of the zeros got bit-flipped.
+* $p_1 \bigl( (1-q)^n + (n-1) q^2 (1-q)^{n-2}\bigr)$ is the probability of two disjoint events
+    * either we measured string with Hamming weight 1 without any bit-flip
+    * or we measured string with Hamming weight 1, but two bit-flips occured. The "1" got flipped to "0", and one "0" got flipped to "1".
+* Notice that for simplicity, all the terms with Hamming weight 2, 3, etc. are omitted from the calculation.
 
 We want a good estimate of $p_0$. We get it by combining $s_0$ and $s_1$ as $\hat{p}_0 = a s_0 + b s_1.$ But, of course, we don't know what $s_0$ and $s_1$ are, so we have to use its estimates
 
 $$\hat{p}_0 = a \hat{s}_0 + b \hat{s}_1.$$
 
 To compute $a$ and $b$, we want $\hat{p}_0$ to be
-unbiased. To achieve that, we solve the system of 2 linear equations so that the coefficient with $p_0$ is $1$ and the coefficient with $p_1$ is $0$. We get
+unbiased. To achieve that, we solve the system of 2 linear equations so that the coefficient with $p_0$ is $1$ and the coefficient with $p_1$ is $0$. This system of lin. equations looks like:
 
-$$a = \frac{(1-q)^{2-n}}{(1-q)^2-n q^2},$$
+$$
+\begin{pmatrix}
+(1-q)^n         & n q (1-q)^{n-1} \\
+q(1-q)^{n-1}    & (1-q)^n + (n-1) q^2 (1-q)^{n-2}
+\end{pmatrix}
+\begin{pmatrix}
+a \\
+b
+\end{pmatrix}
+=
+\begin{pmatrix}
+1 \\
+0
+\end{pmatrix}
+$$
 
-$$b = -\frac{q(1-q)^{1-n}}{(1-q)^2-nq^2}.$$
-
-Nice, we got an unbiased estimator, but if we plug in some sample numbers, we see that the result is a bit different from the motivation I was thinking about in the beginning of this post.
+Nice, once we compute $a$ and $b$, we get an unbiased estimator. Let's see how the coefficients look like if we plug in some numbers:
 
 ```python
 >>> q = 0.005
 >>> n = 100
->>> a = ((1-q)**(2-n)) / ((1-q)**2-n*q**2)
->>> b = -(q*(1-q)**(1-n)) / ((1-q)**2-n*q**2)
+>>> a = -((n-1)*q**2 + (1-q)**2) / ((1-q)**n * (2*q - 1))
+>>> b =  q / ((1-q)**(n-1) * (2*q - 1))
 >>> a, b
-(1.6549694753786401, -0.00831642952451578)
+(1.6549590276028556, -0.00829563845070449)
 ```
 
-Notice, that it is not the case that we would increase the count of `0...0` by some fraction of $S_1$. We just increase the count of `0...0` by some coefficient and decrease it with some fraction
+Notice, that it is not the case that we would increase the count of `0...0` by some fraction of $S_1$ (as I've initially though in the motivation). We just increase the count of `0...0` by some coefficient and decrease it with some fraction
 of $S_1$. Huh, not what I expected in the first place. Hence, eventhough this seems like a good estimator, if we don't get $\hat{s}_0>0$ (it really often happens that $\hat{s}_0=0$, because we don't have resources to make sufficient amount of shots... exponentially many...),
 we get even negative $\hat{p}_0$. How to get out of it? Well, I got something in my mind but it needs to settle down little bit:D
 
-What next? There are several problems and some of them are easy to fix. For example, it is impossible in real computations that the readout errors are independent. There will be some correlations etc..., so it will be insufficient to work only with $s_0$ and $s_1$. We need to extend the model to also consider bitstring with higher Hamming distance from `0...0`.
+What next? There are several problems. For example, it could be insufficient to work only with $s_0$ and $s_1$. We need to extend the model to also consider bitstring with higher Hamming distance from `0...0`.
 With the logic I have described, it is straightforward to extend this model to 
 $$\hat{p}_0 = a \hat{s}_0 + b \hat{s}_1 + c \hat{s}_2, $$
-or even further!. (The computation would be conceptually easy but grueling...)
+or even further!. (The computation would be conceptually easy but grueling so I omit it for now...)
 
 There is much to investigate and I think it would be enough even for a paper, but I don't have time right
 now, I hope that I will find few days to dive in a bit more :-)
@@ -82,11 +103,15 @@ now, I hope that I will find few days to dive in a bit more :-)
 
 (2025-08-15)
 Let me extend the post by going with the analysis further. First, let's calculate variance of 
-${\hat{p}_0 = a \hat{s}_0 + b \hat{s}_1.}$
+${\hat{p}_0 = a \hat{s}_0 + b \hat{s}_1}$.
 
 $$\operatorname{Var}(\hat{p}_0) = a^2 \operatorname{Var}(\hat{s}_0) + b^2 \operatorname{Var}(\hat{s}_1) + 2ab \operatorname{Cov}(\hat{s}_0, \hat{s}_1)$$
 
-Let $I_i$ be an indicator r.v. that indicates whether we got `0...0` on i-th shot. It holds that $P(I_i=1)=s_0$ and $\hat{s}_0 = \frac{1}{N}\sum_{i=1}^N I_i.$
+Let $I_i$ be an indicator r.v. that indicates whether we got `0...0` on i-th shot. It holds that
+$P(I_i=1)=s_0$
+and
+$\hat{s}_0 = \frac{1}{N}\sum_{i=1}^N I_i$.
+
 Now, we calculate $\operatorname{Var}(\hat{s}_0)$.
 
 $$\operatorname{Var}(\hat{s}_0) = \frac{1}{N^2} N \operatorname{Var}(I_1) = \frac{s_0 (1-s_0)}{N}$$
@@ -101,7 +126,9 @@ $$\operatorname{Cov}(\hat{s}_0, \hat{s}_1) = \mathbb{E}[\hat{s}_0 \hat{s}_1] - s
 
 So, we have $$\operatorname{Var}(\hat{p}_0) = a^2 \operatorname{Var}(\hat{s}_0) + b^2 \operatorname{Var}(\hat{s}_1) + 2ab \operatorname{Cov}(\hat{s}_0, \hat{s}_1) = \frac{1}{N} \bigl( a^2 s_0 (1-s_0) + b^2 s_1 (1-s_1) -2 a b s_0 s_1 \bigr).$$
 
-Well, it seems that we increased (with realistic values of variables) the variance, hence we shouldn't use the model where the bias reduction is overshadowed by the increased in variance. Aaa, bias-variance tradeoff... Could we tune somehow the parameters to allow some bias but minize mean-squared-error?
+Well, it seems that we increased (with realistic values of variables) the variance, hence we shouldn't use the model where the bias reduction is overshadowed by the increased in variance. Aaa, bias-variance tradeoff...
+
+I plan to extend this a little bit later in some other post.
 
 
 
