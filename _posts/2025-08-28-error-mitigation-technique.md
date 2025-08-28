@@ -42,9 +42,13 @@ s_j &= \sum_{i=0}^n p_i \bigl( {i \choose k} (1-q)^k q^{i-k} {n-i \choose j-k} q
 So, columns of matrix $\mathbf{A}_{:j}$ form coefficients for $s_j$. We seek a linear estimator
 
 $$\hat{p}_0 = \sum_{j=0}^n w_j \hat{s}_j,$$
+
 where the coefficients $\mathbf{w}$ are solution to the system of linear equations
-$\mathbf{Aw} = \mathbf{e}_0$ with $\mathbf{e}_0 = \begin{pmatrix} 1 \\ 0 \\ \vdots \\ 0\end{pmatrix}.$ This choice  $\mathbf{e}_0$ ensures, that our estimator is unbiased. Notice that, if we want less complex model, we can limit ourselves easily just to first $K$ weights (in the previous blog post, $K=2$)
+$$\mathbf{Aw} = \mathbf{e}_0\text{, where } \mathbf{e}_0 = \begin{pmatrix} 1 \\ 0 \\ \vdots \\ 0\end{pmatrix}.$$
+This choice  $\mathbf{e}_0$ ensures, that our estimator is unbiased. Notice that, if we want less complex model, we can limit ourselves easily just to first $K$ weights (in the previous blog post, $K=2$)
+
 $$\mathbf{A_{0:K}w_{0:K}} = \mathbf{e}_0,$$
+
 this introduces some small bias. We need to investigate a bit more, what effects does this have.
 
 The motivation for such error mitigating technique was obtaining correct probability for measuring "all-zeros" strings (it is used in fidelity quantum kernels). But notice, that this method is quite universal, we can use it for any string, not just `0...0`. The only difference is that we wouldn't be interested in Hamming weight anymore but we would be interested in Hamming distance from the particular bit-string we are interested in.
