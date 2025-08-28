@@ -110,7 +110,8 @@ $$\operatorname{Var}(\hat{p}_0) = a^2 \operatorname{Var}(\hat{s}_0) + b^2 \opera
 Let $I_i$ be an indicator r.v. that indicates whether we got `0...0` on i-th shot. It holds that
 $P(I_i=1)=s_0$
 and
-$\hat{s}_0 = \frac{1}{N}\sum_{i=1}^N I_i$.
+${\hat{s}}_0 = \frac{1}{N}\sum_{i=1}^N I_i$
+.
 
 Now, we calculate $\operatorname{Var}(\hat{s}_0)$.
 
